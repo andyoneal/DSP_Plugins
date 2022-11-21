@@ -19,6 +19,16 @@ namespace GalacticScale
         private float orbitPhase = -1;
         private float orbitRadius = -1;
 
+        private double orbitLongitude_rad = -1; // (__instance.orbitLongitude * Math.PI) / 180f;
+        private double orbitLongitude_rad_sin = -1; // Math.Sin(orbitLongitude_rad);
+        private double orbitLongitude_rad_cos = -1; // Math.Cos(orbitLongitude_rad);
+        private double orbitInclination_rad = -1; // (__instance.orbitInclination * Math.PI) / 180f;
+        private double orbitInclination_rad_sin = -1; // Math.Sin(orbitInclination_rad);
+        private double orbitInclination_rad_cos = -1; // Math.Cos(orbitInclination_rad);
+
+        public float[] orbitIncRotateFactors = new float[5];
+        private bool _hasInitedIncRotateFactors = false;
+
         [NonSerialized] public PlanetData planetData;
 
         private int radius = -1;
@@ -164,6 +174,76 @@ namespace GalacticScale
         {
             get => scale < 0 ? InitScale() : scale;
             set => scale = value;
+        }
+
+        public double OrbitLongitudeRadians
+        {
+            get
+            {
+                if (_hasInitedIncRotateFactors) return orbitLongitude_rad;
+                InitPrecomputedOrbitFactors();
+                return orbitLongitude_rad;
+            }
+        }
+
+        public double SinOrbitLongitude
+        {
+            get
+            {
+                if (_hasInitedIncRotateFactors) return orbitLongitude_rad_sin;
+                InitPrecomputedOrbitFactors();
+                return orbitLongitude_rad_sin;
+            }
+        }
+
+        public double CosOrbitLongitude
+        {
+            get
+            {
+                if (_hasInitedIncRotateFactors) return orbitLongitude_rad_cos;
+                InitPrecomputedOrbitFactors();
+                return orbitLongitude_rad_cos;
+            }
+        }
+
+        public double OrbitInclinationRadians
+        {
+            get
+            {
+                if (_hasInitedIncRotateFactors) return orbitInclination_rad;
+                InitPrecomputedOrbitFactors();
+                return orbitInclination_rad;
+            }
+        }
+
+        public double SinOrbitInclination
+        {
+            get
+            {
+                if (_hasInitedIncRotateFactors) return orbitInclination_rad_sin;
+                InitPrecomputedOrbitFactors();
+                return orbitInclination_rad_sin;
+            }
+        }
+
+        public double CosOrbitInclination
+        {
+            get
+            {
+                if (_hasInitedIncRotateFactors) return orbitInclination_rad_cos;
+                InitPrecomputedOrbitFactors();
+                return orbitInclination_rad_cos;
+            }
+        }
+
+        public float[] OrbitIncRotateFactors
+        {
+            get
+            {
+                if (_hasInitedIncRotateFactors) return orbitIncRotateFactors;
+                InitPrecomputedOrbitFactors();
+                return orbitIncRotateFactors;
+            }
         }
 
         public bool IsHabitable
@@ -362,6 +442,23 @@ namespace GalacticScale
         {
             rotationPhase = 0;
             return rotationPhase;
+        }
+
+        // TODO: Set __hasInitedIncRotateFactors=false when Longitude, Inclination, or OrbitRadius changes.
+        private void InitPrecomputedOrbitFactors()
+        {
+            orbitLongitude_rad = (orbitLongitude * Math.PI) / 180f;
+            orbitLongitude_rad_sin = Math.Sin(orbitLongitude_rad);
+            orbitLongitude_rad_cos = Math.Cos(orbitLongitude_rad);
+            orbitInclination_rad = (orbitInclination * Math.PI) / 180f;
+            orbitInclination_rad_sin = Math.Sin(orbitInclination_rad);
+            orbitInclination_rad_cos = Math.Cos(orbitInclination_rad);
+            orbitIncRotateFactors[0] = (float)(orbitRadius *  .5 * (orbitLongitude_rad_cos * (orbitInclination_rad_cos - 1) + orbitInclination_rad_cos + 1));
+            orbitIncRotateFactors[1] = (float)(orbitRadius * orbitLongitude_rad_sin);
+            orbitIncRotateFactors[2] = (float)(orbitRadius * orbitInclination_rad_sin);
+            orbitIncRotateFactors[3] = (float)(orbitRadius * orbitLongitude_rad_cos);
+            orbitIncRotateFactors[4] = (float)(orbitRadius * orbitLongitude_rad_sin * orbitInclination_rad_cos);
+            _hasInitedIncRotateFactors = true;
         }
     }
 }
