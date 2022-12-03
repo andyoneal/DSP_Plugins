@@ -62,6 +62,7 @@ namespace GalacticScale
                 harmony.PatchAll(typeof(PatchOnBuildTool_Inserter));
                 harmony.PatchAll(typeof(PatchOnBuildTool_Path));
                 harmony.PatchAll(typeof(PatchOnBuildTool_PathAddon));
+                harmony.PatchAll(typeof(PatchOnGalaxyData));
                 harmony.PatchAll(typeof(PatchOnGameAbnormalityData));
                 harmony.PatchAll(typeof(PatchOnGameAchievementData));
                 harmony.PatchAll(typeof(PatchOnGameData));
@@ -77,6 +78,7 @@ namespace GalacticScale
                 harmony.PatchAll(typeof(PatchOnPlanetAlgorithm));
                 harmony.PatchAll(typeof(PatchOnPlanetAtmoBlur));
                 harmony.PatchAll(typeof(PatchOnPlanetData));
+                //harmony.PatchAll(typeof(PatchOnPlanetDataRunPose));
                 harmony.PatchAll(typeof(PatchOnPlanetFactory));
                 harmony.PatchAll(typeof(PatchOnPlanetGrid));
                 harmony.PatchAll(typeof(PatchOnPlanetModelingManager));
